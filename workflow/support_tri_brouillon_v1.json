@@ -1,0 +1,125 @@
+{
+  "name": "Support - tri et brouillon v1",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "df2fee9d-378e-4b65-b819-11c26e33060a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-haiku-5-5",
+          "mode": "list",
+          "cachedResultName": "claude-haiku-5-5"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Tu es l'assistant du support client d'un distributeur de sport fictif. Tu aides un conseiller humain : tu classes la demande du client, tu décides si tu peux y répondre, et tu rédiges un brouillon que le conseiller relira.\n\nRÈGLES ABSOLUES\n1. Appuie-toi uniquement sur les procédures ci-dessous. N'invente jamais un délai, un montant, une règle ou une exception.\n2. Choisis decision = \"escalader\" dès que : la situation figure dans la rubrique « À escalader » d'une procédure ; l'information demandée est absente des procédures ; la demande sort du périmètre (cartes cadeaux, livraison à l'étranger, achats en magasin, avis, matériel d'occasion, revendeurs, etc.) ; le client menace (avocat, signalement, réseaux sociaux) ou est très en colère ; il s'agit de sécurité, de données personnelles ou de fraude ; ou si tu as un doute.\n3. Ne promets jamais de geste commercial, d'exception, de remboursement hors règles ni de date précise non prévue par les procédures.\n4. Un client qui remercie ou qui n'a plus besoin d'aide : decision = \"repondre\", brouillon = un court message de clôture.\n5. Rédige en français, en vouvoyant, ton poli et chaleureux, sans accuser le client. Brouillon de 2 à 6 phrases.\n\nFORMAT DE SORTIE\nRéponds uniquement avec un objet JSON valide sur une seule ligne logique, sans texte avant ni après, avec exactement ces clés :\n- \"procedure\" : \"01\" à \"08\", ou \"aucune\" si aucune procédure ne correspond\n- \"decision\" : \"repondre\" ou \"escalader\"\n- \"procedure_citee\" : le titre de la procédure utilisée, ou \"aucune\"\n- \"raison\" : une phrase qui justifie ta décision\n- \"brouillon\" : si decision = \"repondre\", la réponse au client ; si decision = \"escalader\", un court message d'attente poli qui n'engage à rien (par exemple : un conseiller reviendra vers le client)\n\nPROCÉDURES (fictives)\n\nProcédure 01 : Livraison et suivi de commande\n- Délais : livraison standard 3 à 5 jours ouvrés après expédition ; livraison express 24 à 48 h ; expédition sous 48 h ouvrées après la commande.\n- Un email avec le numéro de suivi est envoyé à l'expédition ; le suivi se consulte dans « Mon compte > Mes commandes ».\n- Commande non expédiée après 48 h ouvrées : s'excuser, indiquer le délai restant, proposer un suivi sous 24 h.\n- Colis en retard (plus de 5 jours ouvrés après expédition) : ouvrir une enquête auprès du transporteur ; réponse au client sous 3 jours ouvrés.\n- Colis marqué livré mais non reçu : demander de vérifier voisins et point relais ; escalader si le colis reste introuvable après 48 h.\n- Adresse erronée : modifiable seulement avant l'expédition.\n- À escalader : colis perdu confirmé, remboursement ou renvoi ; client qui évoque un recours juridique ou un signalement.\n\nProcédure 02 : Retours et remboursements\n- Délai de retour : 30 jours après la réception. Produit non porté ou non utilisé, avec étiquettes et emballage d'origine.\n- Retour gratuit en point relais pour les commandes de plus de 50 € ; sinon 4,90 € à la charge du client.\n- Remboursement sous 7 jours ouvrés après réception du colis retourné et contrôle, par le même moyen de paiement que la commande. Échange possible selon le stock.\n- Exclusions : sous-vêtements et maillots de bain ouverts (hygiène) ; produits personnalisés ; articles soldés à plus de 50 % (échange uniquement, pas de remboursement).\n- Demande dans le délai et conditions respectées : envoyer l'étiquette de retour et les étapes. Demande hors délai : refuser poliment, sans exception.\n- Client sans remboursement après 7 jours ouvrés : vérifier la date de réception du retour.\n- À escalader : toute demande hors des conditions écrites (geste commercial, exception) ; remboursement non reçu au-delà de 14 jours.\n\nProcédure 03 : Garantie et produit défectueux\n- Garantie légale de conformité de 2 ans à compter de la livraison. Le défaut doit être antérieur à la demande et non causé par une mauvaise utilisation.\n- Traitement : demander une description du défaut, des photos et le numéro de commande. Si le défaut est avéré : proposer le remplacement ou le remboursement. Étiquette de retour gratuite pour un produit défectueux, quel que soit le montant.\n- Défaut visible dès la réception : remplacement ou remboursement. Usure normale après un long usage : expliquer que ce n'est pas couvert, sans accuser le client. Défaut dans les 30 jours : traiter comme un retour pour défaut.\n- À escalader : doute sur l'origine du défaut (usage ou fabrication) ; produit à risque pour la sécurité (casque, harnais, matériel de sport de combat) ; client qui menace d'un recours ou conteste un refus.\n\nProcédure 04 : Paiement et facturation\n- Moyens de paiement : carte bancaire, PayPal, paiement en 3 fois sans frais à partir de 100 €. Le paiement est débité à la validation de la commande.\n- Facture : envoyée par email à l'expédition et disponible dans « Mon compte > Mes commandes » ; renvoyée sur demande, sans condition. Nom ou adresse de facturation modifiable uniquement avant l'expédition.\n- Paiement refusé : vérifier les informations de la carte, proposer un autre moyen de paiement.\n- Double débit : l'un des deux montants est une autorisation temporaire, libérée sous 5 jours ouvrés ; vérifier d'abord.\n- Code promo qui ne fonctionne pas : vérifier la date de validité et le minimum d'achat.\n- À escalader : double débit confirmé après 5 jours ouvrés ; suspicion de fraude ou de paiement non autorisé ; demande de facture avec TVA professionnelle spécifique.\n\nProcédure 05 : Modification et annulation de commande\n- Annulation ou modification possible tant que la commande n'est pas expédiée (statut « en préparation »). Une fois expédiée, elle ne peut plus être annulée : suivre la procédure de retour (procédure 02).\n- Remboursement d'une commande annulée : sous 7 jours ouvrés.\n- Changement d'adresse ou de taille avant expédition : possible si le stock le permet. Annulation avant expédition : confirmer par email.\n- À escalader : commande dont le statut est incohérent (annulée mais expédiée) ; client qui exige une annulation après expédition en invoquant un motif urgent.\n\nProcédure 06 : Questions produit et tailles\n- Sources : la fiche produit du site (caractéristiques, guide des tailles, composition). Réponds uniquement à partir de ces informations, que tu ne connais pas ici : si la question demande un détail précis de la fiche, indique qu'il se trouve sur la fiche produit.\n- Tailles : renvoyer au guide des tailles de la fiche produit ; conseiller de comparer avec un vêtement bien ajusté ; ne pas deviner la taille du client.\n- Disponibilité : renvoyer à la fiche produit ; aucune promesse de réapprovisionnement.\n- À escalader : question technique absente de la fiche produit ; question de sécurité ou d'usage extrême (casque, escalade) ; demande de conseil médical ou sportif personnalisé.\n\nProcédure 07 : Compte client\n- Mot de passe oublié : lien de réinitialisation envoyé par email, valable 24 h. Email non reçu : vérifier les courriers indésirables, puis l'adresse du compte.\n- Modification de l'email ou des coordonnées : possible dans « Mon compte ». Mise à jour d'adresse : « Mon compte > Mes adresses ». Désinscription de la newsletter : lien en bas de chaque email.\n- Suppression du compte : sur demande écrite, traitée sous 30 jours.\n- À escalader : suspicion de piratage du compte ; demande d'accès ou d'export des données personnelles ; tout échange contenant des données sensibles.\n\nProcédure 08 : Réclamations\n- Accusé de réception dans les 24 h ; réponse définitive sous 5 jours ouvrés. Ton : reconnaître le problème, présenter des excuses sincères, ne jamais accuser le client.\n- Retard de réponse du support : s'excuser et donner une date précise. Client mécontent d'un refus conforme aux règles : expliquer la règle avec empathie, sans la modifier.\n- À escalader (toujours) : menace juridique, avocat, signalement, avis public annoncé ; demande de geste commercial ou d'exception ; réclamation qui dure depuis plus de 14 jours ; client très en colère ou qui insulte.\n\nDEMANDE DU CLIENT\n{{ $json.demande }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 4000
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "284d477d-a897-4858-9cd4-ed85f99fa6e3",
+      "name": "Message a model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "whjjYXkq4aRmztQK",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Nœud Code « Demandes » (mode : Run Once for All Items)\n// 64 demandes SYNTHÉTIQUES du jeu de test. Mets LIMITE à 5 pour un premier essai, puis à 64.\nconst LIMITE = 64;\nconst demandes = [\n {\n  \"id\": \"D001\",\n  \"demande\": \"De quelle matière est ce t-shirt ?\"\n },\n {\n  \"id\": \"D002\",\n  \"demande\": \"Ma commande de samedi n'est toujours pas expédiée, on est mardi.\"\n },\n {\n  \"id\": \"D003\",\n  \"demande\": \"Je suis à 40 jours mais c'était un cadeau d'anniversaire, vous pouvez faire un geste ?\"\n },\n {\n  \"id\": \"D004\",\n  \"demande\": \"Je suis entre M et L pour une veste, je prends quoi ?\"\n },\n {\n  \"id\": \"D005\",\n  \"demande\": \"Mes chaussures de running sont usées après 18 mois d'utilisation intensive.\"\n },\n {\n  \"id\": \"D006\",\n  \"demande\": \"Votre service est une honte, rendez-moi mon argent immédiatement ou je vais sur les réseaux sociaux.\"\n },\n {\n  \"id\": \"D008\",\n  \"demande\": \"Cette tente convient pour 3 adultes ?\"\n },\n {\n  \"id\": \"D009\",\n  \"demande\": \"Je suis déçu du service, ma commande est arrivée en retard.\"\n },\n {\n  \"id\": \"D010\",\n  \"demande\": \"Pouvez-vous me renvoyer ma facture ?\"\n },\n {\n  \"id\": \"D011\",\n  \"demande\": \"Quel est le délai pour retourner un article ?\"\n },\n {\n  \"id\": \"D013\",\n  \"demande\": \"Bonjour, ma commande est-elle bien partie ? Je n'ai pas encore reçu de mail.\"\n },\n {\n  \"id\": \"D014\",\n  \"demande\": \"Mon code promo ne fonctionne pas.\"\n },\n {\n  \"id\": \"D015\",\n  \"demande\": \"Je peux changer la taille de ma commande en préparation ?\"\n },\n {\n  \"id\": \"D016\",\n  \"demande\": \"Je n'ai pas reçu le mail de confirmation d'expédition.\"\n },\n {\n  \"id\": \"D018\",\n  \"demande\": \"Vous refusez mon retour hors délai, je trouve ça injuste.\"\n },\n {\n  \"id\": \"D019\",\n  \"demande\": \"Quelle est la différence entre la taille S et M pour ce t-shirt ?\"\n },\n {\n  \"id\": \"D020\",\n  \"demande\": \"Où en est ma commande ? Ça fait 2 jours que je l'ai passée.\"\n },\n {\n  \"id\": \"D021\",\n  \"demande\": \"J'ai changé d'avis, je peux renvoyer mon sac reçu il y a 3 jours, jamais utilisé ?\"\n },\n {\n  \"id\": \"D022\",\n  \"demande\": \"Je crois qu'on a piraté mon compte, il y a des commandes que je n'ai pas faites.\"\n },\n {\n  \"id\": \"D024\",\n  \"demande\": \"Comment faire pour retourner un article ?\"\n },\n {\n  \"id\": \"D025\",\n  \"demande\": \"Je veux retourner un maillot de bain que j'ai essayé et dont j'ai ouvert l'emballage.\"\n },\n {\n  \"id\": \"D026\",\n  \"demande\": \"Je veux me faire rembourser un sac acheté à -60 % pendant les soldes.\"\n },\n {\n  \"id\": \"D027\",\n  \"demande\": \"Comment savoir si ma commande peut encore être annulée ?\"\n },\n {\n  \"id\": \"D028\",\n  \"demande\": \"Ce sac à dos est-il compatible avec une poche à eau d'une autre marque ?\"\n },\n {\n  \"id\": \"D030\",\n  \"demande\": \"Mon colis est annoncé pour demain, comment le suivre précisément ?\"\n },\n {\n  \"id\": \"D031\",\n  \"demande\": \"Mon sac à dos a un défaut de fabrication, que dois-je vous envoyer ?\"\n },\n {\n  \"id\": \"D033\",\n  \"demande\": \"Finalement mon colis était chez ma voisine, tout est bon, merci !\"\n },\n {\n  \"id\": \"D034\",\n  \"demande\": \"Quel est le délai de livraison en express ?\"\n },\n {\n  \"id\": \"D036\",\n  \"demande\": \"J'ai été débité deux fois pour la même commande.\"\n },\n {\n  \"id\": \"D037\",\n  \"demande\": \"Vous avez reçu mon retour il y a 9 jours ouvrés et je n'ai pas mon remboursement.\"\n },\n {\n  \"id\": \"D038\",\n  \"demande\": \"Je veux annuler ma commande passée il y a une heure.\"\n },\n {\n  \"id\": \"D039\",\n  \"demande\": \"Je peux échanger ma taille 42 contre un 43 ?\"\n },\n {\n  \"id\": \"D041\",\n  \"demande\": \"Mon colis est indiqué livré depuis 5 jours, j'ai demandé aux voisins et au point relais, rien. Je veux un renvoi ou un remboursement.\"\n },\n {\n  \"id\": \"D042\",\n  \"demande\": \"Je voudrais connaître le statut de ma commande n°48213.\"\n },\n {\n  \"id\": \"D043\",\n  \"demande\": \"Mes baskets se décollent après 3 mois, c'est normal ?\"\n },\n {\n  \"id\": \"D044\",\n  \"demande\": \"Ma commande est en préparation depuis 4 jours ouvrés, rien ne bouge.\"\n },\n {\n  \"id\": \"D045\",\n  \"demande\": \"Je ne reçois pas l'email de réinitialisation de mot de passe.\"\n },\n {\n  \"id\": \"D046\",\n  \"demande\": \"Ça fait 16 jours que j'ai renvoyé mon colis et je n'ai toujours pas été remboursé.\"\n },\n {\n  \"id\": \"D048\",\n  \"demande\": \"J'ai acheté ce sac en magasin, je peux le retourner chez vous en ligne ?\"\n },\n {\n  \"id\": \"D049\",\n  \"demande\": \"J'ai commandé lundi, on est jeudi et je n'ai pas de numéro de suivi.\"\n },\n {\n  \"id\": \"D050\",\n  \"demande\": \"Cet article sera-t-il de nouveau en stock ?\"\n },\n {\n  \"id\": \"D051\",\n  \"demande\": \"Bonjour, je n'ai pas reçu d'email avec mon numéro de suivi, j'ai commandé hier. Pouvez-vous m'aider ?\"\n },\n {\n  \"id\": \"D052\",\n  \"demande\": \"J'ai oublié mon mot de passe.\"\n },\n {\n  \"id\": \"D054\",\n  \"demande\": \"Je suis débité deux fois depuis 8 jours ouvrés, les deux montants sont toujours là.\"\n },\n {\n  \"id\": \"D055\",\n  \"demande\": \"Je voudrais changer la couleur de l'article de ma commande en préparation.\"\n },\n {\n  \"id\": \"D056\",\n  \"demande\": \"Comment changer l'adresse email de mon compte ?\"\n },\n {\n  \"id\": \"D057\",\n  \"demande\": \"Je veux retourner un maillot personnalisé avec mon nom.\"\n },\n {\n  \"id\": \"D058\",\n  \"demande\": \"Ma gourde fuit depuis la première utilisation il y a 3 semaines, photos en pièce jointe.\"\n },\n {\n  \"id\": \"D060\",\n  \"demande\": \"Je veux annuler ma commande, elle est partie hier.\"\n },\n {\n  \"id\": \"D061\",\n  \"demande\": \"Je chausse du 42, quelle taille de short dois-je prendre ?\"\n },\n {\n  \"id\": \"D062\",\n  \"demande\": \"Combien de temps faut-il pour recevoir ma commande en livraison standard ?\"\n },\n {\n  \"id\": \"D063\",\n  \"demande\": \"Ce sac est-il lavable en machine ?\"\n },\n {\n  \"id\": \"D065\",\n  \"demande\": \"Quels sont les délais de livraison standard et express ?\"\n },\n {\n  \"id\": \"D066\",\n  \"demande\": \"Quelle est la durée de la garantie ?\"\n },\n {\n  \"id\": \"D067\",\n  \"demande\": \"La couture de mon sac s'est défaite après 2 semaines.\"\n },\n {\n  \"id\": \"D068\",\n  \"demande\": \"Ma commande fait 45 €, qui paie les frais de retour ?\"\n },\n {\n  \"id\": \"D070\",\n  \"demande\": \"Je me suis trompé d'adresse ce matin, la commande n'est pas encore partie. Je peux la corriger ?\"\n },\n {\n  \"id\": \"D071\",\n  \"demande\": \"Ça fait 4 jours que j'attends une réponse à mon email, c'est long.\"\n },\n {\n  \"id\": \"D072\",\n  \"demande\": \"Mon colis a 6 jours ouvrés de retard, je veux juste une date de livraison précise.\"\n },\n {\n  \"id\": \"D073\",\n  \"demande\": \"Le retour est-il gratuit pour une commande de 80 € ?\"\n },\n {\n  \"id\": \"D075\",\n  \"demande\": \"J'ai reçu mon colis il y a 35 jours, je peux encore le retourner ?\"\n },\n {\n  \"id\": \"D076\",\n  \"demande\": \"La fermeture éclair de ma veste est cassée, je l'ai reçue il y a 5 jours.\"\n },\n {\n  \"id\": \"D078\",\n  \"demande\": \"Mon paiement a été refusé, que faire ?\"\n },\n {\n  \"id\": \"D079\",\n  \"demande\": \"Mon colis a été expédié il y a 8 jours ouvrés et n'est toujours pas là. C'est normal ?\"\n }\n];\nreturn demandes.slice(0, LIMITE).map(d => ({ json: d }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "e61560cb-a0d2-4990-8def-37373908c846",
+      "name": "Demandes"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Nœud Code « Lecture » (mode : Run Once for All Items)\n// Lit la réponse JSON de Claude et l'associe à la demande d'origine.\n// Si la réponse est illisible, on escalade par sécurité (jamais de réponse auto sur un doute).\nconst demandes = $('Demandes').all();\nconst sorties = [];\n\n$input.all().forEach((item, i) => {\n  // Claude peut renvoyer un bloc « thinking » avant le texte : on prend le bloc de type « text ».\n  const bloc = (item.json.content ?? []).find((c) => c.type === 'text');\n  const brut = bloc?.text ?? '';\n  let r;\n  try {\n    const m = brut.match(/\\{[\\s\\S]*\\}/);\n    r = JSON.parse(m ? m[0] : brut);\n  } catch (e) {\n    r = {\n      procedure: 'ERREUR_JSON',\n      decision: 'escalader',\n      procedure_citee: '',\n      raison: 'Réponse illisible, escalade par sécurité',\n      brouillon: brut,\n    };\n  }\n  sorties.push({\n    json: {\n      id: demandes[i].json.id,\n      demande: demandes[i].json.demande,\n      procedure: r.procedure,\n      decision: r.decision,\n      procedure_citee: r.procedure_citee,\n      raison: r.raison,\n      brouillon: r.brouillon,\n      input_tokens: item.json.usage?.input_tokens ?? null,\n      output_tokens: item.json.usage?.output_tokens ?? null,\n    },\n  });\n});\n\nreturn sorties;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        0
+      ],
+      "id": "14cce38e-1fda-41b2-a9cd-bdbdccef0c7c",
+      "name": "Bloc de lecture"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Demandes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Demandes": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Bloc de lecture",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c49a1568-f049-4827-8a76-71a7b8c45106",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d8f17db6e37bb5fc57c4d219f72a1cdd86c52059c44243f6c67186aa45cedbd8"
+  },
+  "nodeGroups": [],
+  "id": "wIvjnfumWxYp6JjF",
+  "tags": []
+}
